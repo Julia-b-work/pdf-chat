@@ -2,3 +2,4 @@ streamlit
 pypdf
 anthropic
 python-dotenv
+sentence-transformers

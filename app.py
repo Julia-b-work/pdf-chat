@@ -1,3 +1,5 @@
+import numpy as np
+from sentence_transformers import SentenceTransformer
 import os
 import io
 from dotenv import load_dotenv
@@ -5,10 +7,21 @@ from anthropic import Anthropic
 from pypdf import PdfReader
 import streamlit as st
 
+
+@st.cache_resource
+def load_model():
+    return SentenceTransformer("all-MiniLM-L6-v2")
+
+model = load_model()
+
 load_dotenv()
 
 
-def chunk_text(text, max_chars=800, overlap=100):
+def cosine_similarity(a, b):
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+
+def chunk_text(text, max_chars=400, overlap=100):
     flat = " ".join(text.split())
 
     chunks = []
@@ -22,17 +35,17 @@ def chunk_text(text, max_chars=800, overlap=100):
 
 
 def retrieve(question, chunks, k=3):
-    q_words = set(question.lower().split())
+    q_vec = model.encode(question)
+    chunk_vecs = model.encode(chunks)
 
     scored = []
 
     for i, chunk in enumerate(chunks):
-        c_words = set(chunk.lower().split())
-        overlap = len(q_words & c_words)
-        scored.append((overlap, i, chunk))
+        score = cosine_similarity(q_vec, chunk_vecs[i])
+        scored.append((score, chunk))
 
-    scored.sort(key=lambda item: item[0], reverse=True)
-    return [chunk for _, _, chunk in scored[:k]]
+    scored.sort(key=lambda x: x[0], reverse=True)
+    return [chunk for _, chunk in scored[:k]]
 
 
 def generate(question, chunks):
@@ -69,7 +82,7 @@ if uploaded is not None:
     question = st.text_input("Ask a question")
 
     if question:
-        top = retrieve(question, chunks)
+        top = retrieve(question, chunks, k=5)
         with st.spinner("Thinking..."):
             answer = generate(question, top)
         st.write(answer)

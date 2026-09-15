@@ -20,22 +20,23 @@ Built with Python, Streamlit, and the Claude API.
 The app implements a classic RAG pipeline:
 
 1. **Extract** — pull raw text out of the PDF with `pypdf`.
-2. **Chunk** — split the text into ~800-character windows with 100-char overlap,
-   so no sentence is cut in half.
-3. **Retrieve** — given a question, score every chunk by keyword overlap and
-   take the top 3 most relevant.
+2. **Chunk** — split the text into ~400-character windows with overlap, so each
+   chunk holds a focused idea.
+3. **Retrieve** — embed the question and every chunk with a sentence-transformer
+   model, then return the top 5 most *semantically* similar chunks.
 4. **Generate** — hand those chunks + the question to Claude with a
    "answer only from context, cite the source" prompt.
 
-> **Note:** retrieval currently uses keyword matching. A future iteration will
-> swap it for semantic search with embeddings, which handles synonyms, accents,
-> and phrasing variations far better.
+Retrieval uses **semantic search with embeddings** (`all-MiniLM-L6-v2`), which
+matches meaning rather than exact wording — so synonyms, accents, and phrasing
+variations are handled correctly.
 
 ## Tech stack
 
 - **Python 3**
 - **Streamlit** — UI
 - **pypdf** — PDF text extraction
+- **sentence-transformers** — embeddings for semantic retrieval
 - **Anthropic Claude API** — answer generation
 - **python-dotenv** — local secrets management
 
@@ -97,9 +98,9 @@ same code works in both environments.
 
 - [x] PDF text extraction
 - [x] Fixed-window chunking
-- [x] Keyword-based retrieval
+- [x] Semantic retrieval with embeddings
 - [x] Claude answer generation with citations
 - [x] Streamlit UI
-- [ ] Semantic retrieval with embeddings (replaces keyword search)
+- [ ] Slide-aware chunking (split by topic, not character count)
 - [ ] Multi-PDF support
 - [ ] Streaming responses for long documents
