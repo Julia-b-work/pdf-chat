@@ -1,6 +1,6 @@
 import numpy as np
 
-from rag import chunk_text, cosine_similarity
+from rag import chunk_text, cosine_similarity, make_chunks
 
 
 def test_chunk_short_text_is_single_chunk():
@@ -34,3 +34,15 @@ def test_cosine_similarity_orthogonal_is_zero():
     a = np.array([1.0, 0.0])
     b = np.array([0.0, 1.0])
     assert abs(cosine_similarity(a, b)) < 1e-9
+
+def test_make_chunks_tags_short_text():
+    assert make_chunks("doc.pdf", "hello world") == [
+        {"doc": "doc.pdf", "text": "hello world"}
+    ]
+
+
+def test_make_chunks_tags_every_chunk_of_long_text():
+    chunks = make_chunks("doc.pdf", "a" * 1000)
+    assert len(chunks) > 1
+    assert all(c["doc"] == "doc.pdf" for c in chunks)
+    assert all("text" in c for c in chunks)

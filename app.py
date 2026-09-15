@@ -5,18 +5,18 @@ from anthropic import Anthropic
 from pypdf import PdfReader
 import streamlit as st
 
-from rag import chunk_text, retrieve
+from rag import make_chunks, retrieve
 
 load_dotenv()
 
 
 def generate(question, chunks):
-    context = "\n\n".join(f"[{i + 1}] {chunk}" for i, chunk in enumerate(chunks))
+    context = "\n\n".join(f"[{i + 1}] ({chunk['doc']}) {chunk['text']}" for i, chunk in enumerate(chunks))
 
     prompt = (
         "reply using ONLY the context below. "
         "if the answer is not in the context, say you didn't find it. "
-        "cite the number of the chunk you used.\n\n"
+        "cite the document name and the number of the chunk you used.\n\n"
         f"Context:\n{context}\n\n"
         f"Question: {question}"
     )
@@ -33,13 +33,17 @@ def generate(question, chunks):
 
 st.title("Chat with your PDFs")
 
-uploaded = st.file_uploader("Upload a PDF", type="pdf")
+uploaded = st.file_uploader("Upload a PDF", type="pdf", 
+                            accept_multiple_files=True)
 
-if uploaded is not None:
-    reader = PdfReader(io.BytesIO(uploaded.read()))
-    text = "\n".join(page.extract_text() or "" for page in reader.pages)
-    chunks = chunk_text(text)
-    st.write(f"Loaded {len(chunks)} chunks")
+if uploaded:
+    chunks = []
+    for f in uploaded:
+        reader = PdfReader(io.BytesIO(f.read()))
+        text = "\n".join(page.extract_text() or "" for page in reader.pages)
+        chunks.extend(make_chunks(f.name, text)
+
+    st.write(f"Loaded {len(chunks)} chunks from {len(uploaded)} file(s)")
 
     question = st.text_input("Ask a question")
 

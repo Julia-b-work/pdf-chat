@@ -15,6 +15,8 @@ def chunk_text(text, max_chars=400, overlap=100):
         start += step
     return chunks
 
+def make_chunks(doc_name, text):
+    return  [{"doc": doc_name, "text": ch} for ch in chunk_text(text)]
 
 _model = None
 
@@ -31,9 +33,10 @@ def _load_model():
 
 
 def retrieve(question, chunks, k=3):
+    texts = [chunk["text"] for chunk in chunks]
     model = _load_model()
     q_vec = model.encode(question)
-    chunk_vecs = model.encode(chunks)
+    chunk_vecs = model.encode(texts)
 
     scored = []
     for i, chunk in enumerate(chunks):
