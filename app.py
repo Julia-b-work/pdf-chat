@@ -38,10 +38,20 @@ uploaded = st.file_uploader("Upload a PDF", type="pdf",
 
 if uploaded:
     chunks = []
+    empty_files = []
     for f in uploaded:
         reader = PdfReader(io.BytesIO(f.read()))
         text = "\n".join(page.extract_text() or "" for page in reader.pages)
-        chunks.extend(make_chunks(f.name, text)
+        file_chunks = make_chunks(f.name, text)
+        if not file_chunks:
+            empty_files.append(f.name)
+        chunks.extend(file_chunks)
+
+    if empty_files:
+        st.warning(
+            f"No text found in: {', '.join(empty_files)}. "
+            "This may be a scanned (image-only) PDF."
+        )
 
     st.write(f"Loaded {len(chunks)} chunks from {len(uploaded)} file(s)")
 

@@ -46,3 +46,7 @@ def test_make_chunks_tags_every_chunk_of_long_text():
     assert len(chunks) > 1
     assert all(c["doc"] == "doc.pdf" for c in chunks)
     assert all("text" in c for c in chunks)
+
+
+def test_make_chunks_empty_text_returns_empty_list():
+    assert make_chunks("doc.pdf", "") == []

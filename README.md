@@ -6,7 +6,7 @@ the documents' content — with citations to the source document and chunks.
 
 Built with Python, Streamlit, and the Claude API.
 
-**Current version: 0.2.0** — see [CHANGELOG.md](CHANGELOG.md).
+**Current version: 0.2.1** — see [CHANGELOG.md](CHANGELOG.md).
 
 ## Features
 

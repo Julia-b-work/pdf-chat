@@ -15,8 +15,9 @@ def chunk_text(text, max_chars=400, overlap=100):
         start += step
     return chunks
 
+
 def make_chunks(doc_name, text):
-    return  [{"doc": doc_name, "text": ch} for ch in chunk_text(text)]
+    return [{"doc": doc_name, "text": ch} for ch in chunk_text(text)]
 
 _model = None
 

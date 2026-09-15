@@ -3,6 +3,16 @@
 All notable changes to this project are recorded here. Versions follow
 [Semantic Versioning](https://semver.org/): MAJOR.MINOR.PATCH.
 
+## [0.2.1] - 2026-09-15
+
+### Fixed
+- **Empty PDFs.** Scanned (image-only) PDFs previously produced zero chunks with
+  no explanation; the app now warns that no text was found and names the file.
+- Code-style cleanup in `rag.py` (PEP8 blank lines and spacing).
+
+### Added
+- Test for the empty-text chunking edge case.
+
 ## [0.2.0] - 2026-09-15
 
 ### Added
