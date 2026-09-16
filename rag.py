@@ -21,6 +21,12 @@ def make_chunks(doc_name, text):
 
 _model = None
 
+def chunk_slides(doc_name, pages, max_chars=400):
+    chunks = []
+    for page_num, page_text in pages:
+        for text in chunk_text(page_text, max_chars=max_chars, overlap=0):
+            chunks.append({"doc": doc_name, "page": page_num, "text": text})
+    return chunks
 
 def _load_model():
     # Imported lazily so importing rag.py (e.g. in tests) stays fast and does

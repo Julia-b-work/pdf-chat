@@ -3,6 +3,22 @@
 All notable changes to this project are recorded here. Versions follow
 [Semantic Versioning](https://semver.org/): MAJOR.MINOR.PATCH.
 
+## [0.3.0] - 2026-09-15
+
+### Added
+- **Slide-aware chunking.** Chunks now respect page boundaries instead of
+  splitting the flattened document into arbitrary windows, so a chunk never
+  spans two pages. Each chunk is tagged with its source page, and answers cite
+  the document and page number.
+- `chunk_slides()` helper in `rag.py` — pure, testable page-aware chunking
+  (skips empty pages, sub-chunks long pages).
+- Tests covering page tagging, empty-page skipping, and sub-chunking.
+
+### Changed
+- `generate()` now cites the source document and page number instead of the
+  document and chunk number.
+- README updated to match: intro, features, how-it-works, and roadmap.
+
 ## [0.2.1] - 2026-09-15
 
 ### Fixed

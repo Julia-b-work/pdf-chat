@@ -1,6 +1,6 @@
 import numpy as np
 
-from rag import chunk_text, cosine_similarity, make_chunks
+from rag import chunk_slides, chunk_text, cosine_similarity, make_chunks
 
 
 def test_chunk_short_text_is_single_chunk():
@@ -50,3 +50,25 @@ def test_make_chunks_tags_every_chunk_of_long_text():
 
 def test_make_chunks_empty_text_returns_empty_list():
     assert make_chunks("doc.pdf", "") == []
+
+
+def test_chunk_slides_tags_each_page():
+    pages = [(1, "hello"), (2, "world")]
+    assert chunk_slides("d.pdf", pages) == [
+        {"doc": "d.pdf", "page": 1, "text": "hello"},
+        {"doc": "d.pdf", "page": 2, "text": "world"},
+    ]
+
+
+def test_chunk_slides_skips_empty_pages():
+    pages = [(1, ""), (2, "hello"), (3, "   ")]
+    assert chunk_slides("d.pdf", pages) == [
+        {"doc": "d.pdf", "page": 2, "text": "hello"},
+    ]
+
+
+def test_chunk_slides_subchunks_long_page():
+    chunks = chunk_slides("d.pdf", [(3, "a" * 1000)], max_chars=400)
+    assert len(chunks) > 1
+    assert all(c["page"] == 3 for c in chunks)
+    assert all(c["doc"] == "d.pdf" for c in chunks)

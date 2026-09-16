@@ -2,18 +2,18 @@
 
 A retrieval-augmented-generation (RAG) web app that answers questions about one
 or more documents. Upload PDFs, ask a question, and get an answer grounded in
-the documents' content — with citations to the source document and chunks.
+the documents' content — with citations to the source document and page.
 
 Built with Python, Streamlit, and the Claude API.
 
-**Current version: 0.2.1** — see [CHANGELOG.md](CHANGELOG.md).
+**Current version: 0.3.0** — see [CHANGELOG.md](CHANGELOG.md).
 
 ## Features
 
 - **Upload one or more PDFs** and ask questions across all of them in plain language.
 - **Grounded answers** — Claude is instructed to answer *only* from the
   document and to say when it can't find the answer, so it doesn't hallucinate.
-- **Cited responses** — every answer references the source document and chunks it used.
+- **Cited responses** — every answer references the source document and page it used.
 - **Clean, minimal UI** built with Streamlit.
 - **Free to deploy** on Streamlit Cloud.
 
@@ -22,8 +22,8 @@ Built with Python, Streamlit, and the Claude API.
 The app implements a classic RAG pipeline:
 
 1. **Extract** — pull raw text out of each PDF with `pypdf`.
-2. **Chunk** — split the text into ~400-character windows with overlap, so each
-   chunk holds a focused idea, tagged with its source document.
+2. **Chunk** — split each page into ~400-character windows, so every chunk is
+   slide-aware and tagged with its source document and page number.
 3. **Retrieve** — embed the question and every chunk with a sentence-transformer
    model, then return the top 5 most *semantically* similar chunks.
 4. **Generate** — hand those chunks + the question to Claude with a
@@ -105,6 +105,6 @@ same code works in both environments.
 - [x] Semantic retrieval with embeddings
 - [x] Claude answer generation with citations
 - [x] Streamlit UI
-- [ ] Slide-aware chunking (split by topic, not character count)
+- [x] Slide-aware chunking (split by page, not character count)
 - [x] Multi-PDF support
 - [ ] Streaming responses for long documents

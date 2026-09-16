@@ -5,18 +5,18 @@ from anthropic import Anthropic
 from pypdf import PdfReader
 import streamlit as st
 
-from rag import make_chunks, retrieve
+from rag import chunk_slides, retrieve
 
 load_dotenv()
 
 
 def generate(question, chunks):
-    context = "\n\n".join(f"[{i + 1}] ({chunk['doc']}) {chunk['text']}" for i, chunk in enumerate(chunks))
+    context = "\n\n".join(f"[{i + 1}] ({chunk['doc']}, page {chunk['page']}) {chunk['text']}" for i, chunk in enumerate(chunks))
 
     prompt = (
         "reply using ONLY the context below. "
         "if the answer is not in the context, say you didn't find it. "
-        "cite the document name and the number of the chunk you used.\n\n"
+        "cite the document name and page number you used.\n\n"
         f"Context:\n{context}\n\n"
         f"Question: {question}"
     )
@@ -41,8 +41,8 @@ if uploaded:
     empty_files = []
     for f in uploaded:
         reader = PdfReader(io.BytesIO(f.read()))
-        text = "\n".join(page.extract_text() or "" for page in reader.pages)
-        file_chunks = make_chunks(f.name, text)
+        pages = [(i + 1, page.extract_text() or "") for i, page in enumerate(reader.pages)]
+        file_chunks = chunk_slides(f.name, pages)
         if not file_chunks:
             empty_files.append(f.name)
         chunks.extend(file_chunks)
