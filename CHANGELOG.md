@@ -3,6 +3,25 @@
 All notable changes to this project are recorded here. Versions follow
 [Semantic Versioning](https://semver.org/): MAJOR.MINOR.PATCH.
 
+## [0.5.0] - 2026-09-17
+
+### Added
+- **Chat interface.** Replaced the single-question form with a full chat UI
+  (`st.chat_message` / `st.chat_input`) that keeps the conversation history.
+- **Conversation memory.** Follow-up questions work — the last few turns are
+  sent to Claude as prior messages (capped at 8).
+- **Visible sources.** Each answer lists the retrieved chunks (document + page)
+  in a collapsible "Sources" section.
+- A "Thinking..." spinner while the answer is being retrieved and generated.
+
+### Changed
+- Chunking now runs only when the uploaded files change (via a filename/size
+  signature) instead of on every question.
+- `generate()` accepts prior conversation history.
+- `chunk_text()` raises on an invalid `overlap` (was a silent infinite loop).
+- Removed the unused `make_chunks()` helper.
+- Code is now documented with docstrings and inline comments.
+
 ## [0.4.0] - 2026-09-15
 
 ### Changed

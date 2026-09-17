@@ -6,7 +6,7 @@ the documents' content — with citations to the source document and page.
 
 Built with Python, Streamlit, and the Claude API.
 
-**Current version: 0.4.0** — see [CHANGELOG.md](CHANGELOG.md).
+**Current version: 0.5.0** — see [CHANGELOG.md](CHANGELOG.md).
 
 ## Features
 
@@ -15,6 +15,9 @@ Built with Python, Streamlit, and the Claude API.
   document and to say when it can't find the answer, so it doesn't hallucinate.
 - **Cited responses** — every answer references the source document and page it used.
 - **Streaming responses** — answers appear token-by-token as Claude generates them.
+- **Chat interface** — a real conversation UI with history, not a single search box.
+- **Conversation memory** — follow-up questions build on earlier ones.
+- **Visible sources** — every answer shows which document and page it drew from.
 - **Clean, minimal UI** built with Streamlit.
 - **Free to deploy** on Streamlit Cloud.
 

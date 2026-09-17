@@ -1,6 +1,7 @@
 import numpy as np
+import pytest
 
-from rag import chunk_slides, chunk_text, cosine_similarity, make_chunks
+from rag import chunk_slides, chunk_text, cosine_similarity
 
 
 def test_chunk_short_text_is_single_chunk():
@@ -35,21 +36,9 @@ def test_cosine_similarity_orthogonal_is_zero():
     b = np.array([0.0, 1.0])
     assert abs(cosine_similarity(a, b)) < 1e-9
 
-def test_make_chunks_tags_short_text():
-    assert make_chunks("doc.pdf", "hello world") == [
-        {"doc": "doc.pdf", "text": "hello world"}
-    ]
-
-
-def test_make_chunks_tags_every_chunk_of_long_text():
-    chunks = make_chunks("doc.pdf", "a" * 1000)
-    assert len(chunks) > 1
-    assert all(c["doc"] == "doc.pdf" for c in chunks)
-    assert all("text" in c for c in chunks)
-
-
-def test_make_chunks_empty_text_returns_empty_list():
-    assert make_chunks("doc.pdf", "") == []
+def test_chunk_text_rejects_overlap_too_large():
+    with pytest.raises(ValueError):
+        chunk_text("hello world", max_chars=5, overlap=5)
 
 
 def test_chunk_slides_tags_each_page():
