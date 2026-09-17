@@ -6,7 +6,7 @@ the documents' content — with citations to the source document and page.
 
 Built with Python, Streamlit, and the Claude API.
 
-**Current version: 0.3.0** — see [CHANGELOG.md](CHANGELOG.md).
+**Current version: 0.4.0** — see [CHANGELOG.md](CHANGELOG.md).
 
 ## Features
 
@@ -14,6 +14,7 @@ Built with Python, Streamlit, and the Claude API.
 - **Grounded answers** — Claude is instructed to answer *only* from the
   document and to say when it can't find the answer, so it doesn't hallucinate.
 - **Cited responses** — every answer references the source document and page it used.
+- **Streaming responses** — answers appear token-by-token as Claude generates them.
 - **Clean, minimal UI** built with Streamlit.
 - **Free to deploy** on Streamlit Cloud.
 
@@ -107,4 +108,4 @@ same code works in both environments.
 - [x] Streamlit UI
 - [x] Slide-aware chunking (split by page, not character count)
 - [x] Multi-PDF support
-- [ ] Streaming responses for long documents
+- [x] Streaming responses for long documents

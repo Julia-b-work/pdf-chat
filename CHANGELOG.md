@@ -3,6 +3,15 @@
 All notable changes to this project are recorded here. Versions follow
 [Semantic Versioning](https://semver.org/): MAJOR.MINOR.PATCH.
 
+## [0.4.0] - 2026-09-15
+
+### Changed
+- **Streaming responses.** Answers now appear token-by-token as Claude generates
+  them (via `st.write_stream`) instead of waiting behind a spinner.
+- `generate()` is now a generator that yields text chunks from
+  `client.messages.stream`.
+- README updated to match: features and roadmap.
+
 ## [0.3.0] - 2026-09-15
 
 ### Added

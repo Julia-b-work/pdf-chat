@@ -23,12 +23,13 @@ def generate(question, chunks):
 
     api_key = os.getenv("ANTHROPIC_API_KEY") or st.secrets.get("ANTHROPIC_API_KEY")
     client = Anthropic(api_key=api_key)
-    message = client.messages.create(
+    with client.messages.stream(
         model="claude-sonnet-4-5",
         max_tokens=500,
         messages=[{"role": "user", "content": prompt}],
-    )
-    return message.content[0].text
+    ) as stream:
+        for text in stream.text_stream:
+            yield text
 
 
 st.title("Chat with your PDFs")
@@ -59,6 +60,4 @@ if uploaded:
 
     if question:
         top = retrieve(question, chunks, k=5)
-        with st.spinner("Thinking..."):
-            answer = generate(question, top)
-        st.write(answer)
+        st.write_stream(generate(question, top))
