@@ -3,6 +3,18 @@
 All notable changes to this project are recorded here. Versions follow
 [Semantic Versioning](https://semver.org/): MAJOR.MINOR.PATCH.
 
+## [0.5.1] - 2026-09-17
+
+### Changed
+- **Cached embeddings.** Chunk embeddings are now computed once (when files
+  load) and reused across questions, instead of re-embedding the whole corpus
+  on every query. Retrieval is roughly 1000x faster per question on large PDFs;
+  the one-time indexing cost moves to upload time.
+- `rag.py` gains `embed_chunks()`; `retrieve()` accepts precomputed embeddings.
+
+### Added
+- `benchmark.py` — a stress/benchmark script for chunking and retrieval.
+
 ## [0.5.0] - 2026-09-17
 
 ### Added
