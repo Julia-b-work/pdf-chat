@@ -3,7 +3,7 @@
 All notable changes to this project are recorded here. Versions follow
 [Semantic Versioning](https://semver.org/): MAJOR.MINOR.PATCH.
 
-## [0.5.1] - 2026-09-17
+## [0.5.1] - 2026-09-18
 
 ### Changed
 - **Cached embeddings.** Chunk embeddings are now computed once (when files
@@ -34,7 +34,7 @@ All notable changes to this project are recorded here. Versions follow
 - Removed the unused `make_chunks()` helper.
 - Code is now documented with docstrings and inline comments.
 
-## [0.4.0] - 2026-09-15
+## [0.4.0] - 2026-09-17
 
 ### Changed
 - **Streaming responses.** Answers now appear token-by-token as Claude generates
@@ -43,7 +43,7 @@ All notable changes to this project are recorded here. Versions follow
   `client.messages.stream`.
 - README updated to match: features and roadmap.
 
-## [0.3.0] - 2026-09-15
+## [0.3.0] - 2026-09-16
 
 ### Added
 - **Slide-aware chunking.** Chunks now respect page boundaries instead of
