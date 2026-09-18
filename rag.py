@@ -55,17 +55,29 @@ def _load_model():
     return _model
 
 
-def retrieve(question, chunks, k=3):
+def embed_chunks(chunks):
+    """Embed every chunk's text once.
+
+    This is the expensive step — it runs the embedding model over the whole
+    corpus — so it should be called once per document set, not per question.
+    Returns the chunk embeddings in the same order as `chunks`.
+    """
+    model = _load_model()
+    texts = [chunk["text"] for chunk in chunks]
+    return model.encode(texts)
+
+
+def retrieve(question, chunks, k=3, chunk_vecs=None):
     """Return the top-`k` chunks most semantically similar to the question.
 
-    Both the question and every chunk are embedded, then ranked by cosine
-    similarity. Returns the full chunk dicts (doc + page + text) so citations
-    can name the source.
+    If `chunk_vecs` (precomputed embeddings from `embed_chunks`) is given, only
+    the question is embedded — fast. Otherwise the chunks are embedded too,
+    which is slower but convenient for one-off calls.
     """
-    texts = [chunk["text"] for chunk in chunks]
     model = _load_model()
     q_vec = model.encode(question)
-    chunk_vecs = model.encode(texts)
+    if chunk_vecs is None:
+        chunk_vecs = model.encode([chunk["text"] for chunk in chunks])
 
     scored = []
     for i, chunk in enumerate(chunks):

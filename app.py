@@ -11,7 +11,7 @@ from anthropic import Anthropic
 from pypdf import PdfReader
 import streamlit as st
 
-from rag import chunk_slides, retrieve
+from rag import chunk_slides, embed_chunks, retrieve
 
 load_dotenv()
 
@@ -73,6 +73,10 @@ if uploaded:
         st.session_state["chunks"] = chunks
         st.session_state["empty_files"] = empty_files
         st.session_state["messages"] = []  # new documents -> fresh conversation
+        # Embed the corpus once (the expensive part) so each question only
+        # embeds the query. Skipped when there is nothing to search.
+        with st.spinner("Indexing document..."):
+            st.session_state["chunk_vecs"] = embed_chunks(chunks) if chunks else []
     else:
         chunks = st.session_state["chunks"]
         empty_files = st.session_state["empty_files"]
@@ -108,7 +112,7 @@ if uploaded:
 
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
-                top = retrieve(prompt, st.session_state["chunks"], k=5)
+                top = retrieve(prompt, st.session_state["chunks"], k=5, chunk_vecs=st.session_state["chunk_vecs"])
                 answer = st.write_stream(generate(prompt, top, st.session_state["messages"][:-1]))
                 with st.expander("Sources"):
                     for i, chunk in enumerate(top):
